@@ -1,0 +1,148 @@
+{
+  "name": "clickup-todo",
+  "displayName": "ClickUp TODO",
+  "description": "A TODO.md task list in the VS Code sidebar, synced both ways with ClickUp lists, so you and your AI coding agent share one task list.",
+  "version": "0.3.1",
+  "publisher": "george",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "main": "./out/extension.js",
+  "activationEvents": [
+    "workspaceContains:TODO.md"
+  ],
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "clickupTodo",
+          "title": "ClickUp TODO",
+          "icon": "media/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "clickupTodo": [
+        {
+          "type": "webview",
+          "id": "clickupTodo.tasks",
+          "name": "Tasks"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "clickupTodo.connect",
+        "title": "Connect this workspace",
+        "category": "ClickUp TODO"
+      },
+      {
+        "command": "clickupTodo.disconnect",
+        "title": "Disconnect this workspace",
+        "category": "ClickUp TODO"
+      },
+      {
+        "command": "clickupTodo.setToken",
+        "title": "Set API token",
+        "category": "ClickUp TODO"
+      },
+      {
+        "command": "clickupTodo.sync",
+        "title": "Sync now",
+        "category": "ClickUp TODO",
+        "icon": "$(sync)"
+      },
+      {
+        "command": "clickupTodo.switchList",
+        "title": "Switch list",
+        "category": "ClickUp TODO",
+        "icon": "$(list-selection)"
+      },
+      {
+        "command": "clickupTodo.addTask",
+        "title": "Add task",
+        "category": "ClickUp TODO",
+        "icon": "$(add)"
+      },
+      {
+        "command": "clickupTodo.openFile",
+        "title": "Open TODO.md",
+        "category": "ClickUp TODO",
+        "icon": "$(go-to-file)"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "clickupTodo.sync",
+          "when": "view == clickupTodo.tasks && clickupTodo.connected",
+          "group": "navigation@1"
+        },
+        {
+          "command": "clickupTodo.openFile",
+          "when": "view == clickupTodo.tasks",
+          "group": "navigation@2"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "ClickUp TODO",
+      "properties": {
+        "clickupTodo.file": {
+          "type": "string",
+          "default": "TODO.md",
+          "description": "The task file, relative to the workspace folder."
+        },
+        "clickupTodo.defaultListId": {
+          "type": "string",
+          "default": "",
+          "description": "ID of the list shown first, and used for tasks written above any list heading. Empty = the workspace's first list."
+        },
+        "clickupTodo.excludedListIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "IDs of ClickUp lists left out of the sync."
+        },
+        "clickupTodo.reviewStatus": {
+          "type": "string",
+          "default": "in review",
+          "description": "The ClickUp status a ticked task gets. Someone then reviews it and sets it to complete in ClickUp."
+        },
+        "clickupTodo.syncIntervalMinutes": {
+          "type": "number",
+          "default": 3,
+          "minimum": 1,
+          "description": "How often to pull changes made in ClickUp."
+        },
+        "clickupTodo.workspaceId": {
+          "type": "string",
+          "default": "",
+          "description": "ClickUp workspace ID. Empty = the token's first workspace."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p .",
+    "watch": "tsc -w -p .",
+    "test": "tsc -p . && node --test out/test/*.test.js",
+    "package": "tsc -p . && vsce package"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.43",
+    "@types/vscode": "^1.90.0",
+    "@vscode/vsce": "^3.9.2",
+    "typescript": "^5.9.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/geosem42/clickup-todo.git"
+  }
+}
